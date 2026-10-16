@@ -55,6 +55,7 @@ fun PantallaInicioBase(
     titulo: String,
     tipoUsuario: String,
     usuario: Usuario,
+    onCambiarNip: () -> Unit,
     onSesionCerrada: () -> Unit
 ) {
     Scaffold(
@@ -69,6 +70,7 @@ fun PantallaInicioBase(
                 },
                 actions = {
                     MenuDerecho(
+                        onCambiarNip = onCambiarNip,
                         onSesionCerrada = onSesionCerrada
                     )
                 }
@@ -169,13 +171,13 @@ fun PantallaInicioBase(
                     )
 
                     Text(
-                        text = "Tipo de usuario",
+                        text = "Correo electrónico",
                         color = Color.Gray,
                         fontSize = 14.sp
                     )
 
                     Text(
-                        text = tipoUsuario,
+                        text = usuario.correo ?: "No registrado",
                         color = AzulUAS,
                         fontSize = 16.sp
                     )
@@ -188,6 +190,7 @@ fun PantallaInicioBase(
 
 @Composable
 private fun MenuDerecho(
+    onCambiarNip: () -> Unit,
     onSesionCerrada: () -> Unit
 ) {
     var expandido by remember { mutableStateOf(false) }
@@ -210,9 +213,10 @@ private fun MenuDerecho(
             }
         ) {
             DropdownMenuItem(
-                text = { Text("Cambiar nip") },
+                text = { Text("Cambiar NIP") },
                 onClick = {
-
+                    expandido = false
+                    onCambiarNip()
                 }
             )
             DropdownMenuItem(

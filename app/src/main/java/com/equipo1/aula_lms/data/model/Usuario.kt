@@ -16,4 +16,5 @@ data class Usuario(
     @SerialName("numero_cuenta") val numeroCuenta: String,
     val nombre: String,
     val rol: Rol,
+    val correo: String? = null
 )
