@@ -9,6 +9,7 @@ import com.equipo1.aula_lms.data.AuthRepository
 import com.equipo1.aula_lms.data.model.Rol
 import com.equipo1.aula_lms.data.model.Usuario
 import com.equipo1.aula_lms.ui.inicio.AvisoAdminScreen
+import com.equipo1.aula_lms.ui.inicio.CambiarNipScreen
 import com.equipo1.aula_lms.ui.inicio.InicioAlumno
 import com.equipo1.aula_lms.ui.inicio.InicioDocente
 import com.equipo1.aula_lms.ui.login.LoginScreen
@@ -19,6 +20,7 @@ private object Rutas {
     const val DOCENTE = "docente"
     const val AVISO_ADMIN = "aviso-admin"
     const val PERFIL = "perfil"
+    const val CAMBIAR_NIP = "cambiar-nip"
 }
 
 private fun rutaInicio(usuario: Usuario): String =
@@ -52,6 +54,9 @@ fun AppNavHost(authRepository: AuthRepository, modifier: Modifier = Modifier) {
             authRepository.usuarioActual()?.let { usuario ->
                 InicioAlumno(
                     usuario = usuario,
+                    onCambiarNip = {
+                        navController.navigate(Rutas.CAMBIAR_NIP)
+                    },
                     onSesionCerrada = {
                         navController.navigate(Rutas.LOGIN) {
                             popUpTo(0) { inclusive = true }
@@ -65,6 +70,9 @@ fun AppNavHost(authRepository: AuthRepository, modifier: Modifier = Modifier) {
             authRepository.usuarioActual()?.let { usuario ->
                 InicioDocente(
                     usuario = usuario,
+                    onCambiarNip = {
+                        navController.navigate(Rutas.CAMBIAR_NIP)
+                    },
                     onSesionCerrada = {
                         navController.navigate(Rutas.LOGIN) {
                             popUpTo(0) { inclusive = true }
@@ -72,6 +80,13 @@ fun AppNavHost(authRepository: AuthRepository, modifier: Modifier = Modifier) {
                     }
                 )
             }
+        }
+        composable(Rutas.CAMBIAR_NIP) {
+            CambiarNipScreen(
+                onVolver = {
+                    navController.popBackStack()
+                }
+            )
         }
         composable(Rutas.AVISO_ADMIN) {
             authRepository.usuarioActual()?.let { AvisoAdminScreen(it) }

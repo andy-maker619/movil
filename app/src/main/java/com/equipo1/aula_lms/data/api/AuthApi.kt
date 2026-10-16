@@ -1,5 +1,6 @@
 package com.equipo1.aula_lms.data.api
 
+import com.equipo1.aula_lms.data.model.CambiarNipRequest
 import com.equipo1.aula_lms.data.model.Usuario
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -7,15 +8,19 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 
 interface AuthApi {
     @POST("login")
     suspend fun login(@Body datos: LoginRequest): LoginResponse
     @POST("logout")
     suspend fun logout(): Response<Unit>
-
     @GET("me")
     suspend fun me(): Usuario
+    @PUT("cambiar-nip")
+    suspend fun cambiarNip(
+        @Body datos: CambiarNipRequest
+    ): Response<Unit>
 }
 
 @Serializable

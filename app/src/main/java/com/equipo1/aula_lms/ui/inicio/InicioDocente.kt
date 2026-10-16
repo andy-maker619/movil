@@ -11,6 +11,7 @@ import com.equipo1.aula_lms.ui.inicio.PantallaInicioBase
 @Composable
 fun InicioDocente(
     usuario: Usuario,
+    onCambiarNip: () -> Unit,
     onSesionCerrada: () -> Unit,
     viewModel: SesionViewModel = viewModel(
         factory = SesionViewModel.Factory
@@ -28,6 +29,7 @@ fun InicioDocente(
         titulo = "Inicio",
         tipoUsuario = "Docente",
         usuario = usuario,
+        onCambiarNip = onCambiarNip,
         onSesionCerrada = viewModel::cerrarSesion
     )
 
