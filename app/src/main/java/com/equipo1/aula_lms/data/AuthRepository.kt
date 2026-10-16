@@ -15,6 +15,8 @@ class AuthRepository(
 ) {
     fun usuarioActual(): Usuario? = sesion.usuario()
 
+
+
     suspend fun login(numeroCuenta: String, nip: String): Result<Usuario> =
         try {
             val respuesta = api.login(LoginRequest(numeroCuenta, nip))
@@ -41,7 +43,35 @@ class AuthRepository(
         return mensaje ?: "Error al iniciar sesión (HTTP ${e.code()})."
     }
 
+    suspend fun verificarSesion(): Result<Usuario> {
+        val token = sesion.token()
+            ?: return Result.failure(
+                Exception("No hay una sesión guardada")
+            )
+
+        return try {
+            val usuario = api.me()
+
+            sesion.guardar(token, usuario)
+
+            Result.success(usuario)
+        } catch (e: HttpException) {
+            if (e.code() == 401) {
+                sesion.borrar()
+            }
+
+            Result.failure(
+                Exception("No se pudo verificar la sesión")
+            )
+        } catch (e: IOException) {
+            Result.failure(
+                Exception("No se pudo conectar con el servidor")
+            )
+        }
+    }
+
     private companion object {
         const val TAG = "AuthRepository"
     }
 }
+

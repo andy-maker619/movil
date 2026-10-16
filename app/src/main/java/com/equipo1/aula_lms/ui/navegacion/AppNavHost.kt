@@ -9,17 +9,24 @@ import com.equipo1.aula_lms.data.AuthRepository
 import com.equipo1.aula_lms.data.model.Rol
 import com.equipo1.aula_lms.data.model.Usuario
 import com.equipo1.aula_lms.ui.inicio.AvisoAdminScreen
-import com.equipo1.aula_lms.ui.inicio.InicioScreen
+import com.equipo1.aula_lms.ui.inicio.InicioAlumno
+import com.equipo1.aula_lms.ui.inicio.InicioDocente
 import com.equipo1.aula_lms.ui.login.LoginScreen
 
 private object Rutas {
     const val LOGIN = "login"
-    const val INICIO = "inicio"
+    const val ALUMNO = "alumno"
+    const val DOCENTE = "docente"
     const val AVISO_ADMIN = "aviso-admin"
+    const val PERFIL = "perfil"
 }
 
-private fun rutaInicio(usuario: Usuario) =
-    if (usuario.rol == Rol.ADMINISTRADOR) Rutas.AVISO_ADMIN else Rutas.INICIO
+private fun rutaInicio(usuario: Usuario): String =
+    when (usuario.rol) {
+        Rol.ALUMNO -> Rutas.ALUMNO
+        Rol.DOCENTE -> Rutas.DOCENTE
+        Rol.ADMINISTRADOR -> Rutas.AVISO_ADMIN
+    }
 
 @Composable
 fun AppNavHost(authRepository: AuthRepository, modifier: Modifier = Modifier) {
@@ -41,15 +48,28 @@ fun AppNavHost(authRepository: AuthRepository, modifier: Modifier = Modifier) {
                 },
             )
         }
-        composable(Rutas.INICIO) {
+        composable(Rutas.ALUMNO) {
             authRepository.usuarioActual()?.let { usuario ->
-                InicioScreen(
+                InicioAlumno(
                     usuario = usuario,
                     onSesionCerrada = {
                         navController.navigate(Rutas.LOGIN) {
                             popUpTo(0) { inclusive = true }
                         }
-                    },
+                    }
+                )
+            }
+        }
+
+        composable(Rutas.DOCENTE) {
+            authRepository.usuarioActual()?.let { usuario ->
+                InicioDocente(
+                    usuario = usuario,
+                    onSesionCerrada = {
+                        navController.navigate(Rutas.LOGIN) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    }
                 )
             }
         }

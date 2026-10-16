@@ -5,6 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface AuthApi {
@@ -12,6 +13,9 @@ interface AuthApi {
     suspend fun login(@Body datos: LoginRequest): LoginResponse
     @POST("logout")
     suspend fun logout(): Response<Unit>
+
+    @GET("me")
+    suspend fun me(): Usuario
 }
 
 @Serializable
